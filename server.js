@@ -1,98 +1,125 @@
-const ExcelJS = require("exceljs");
-
 const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
+const ExcelJS = require("exceljs");
 const path = require("path");
+const { Pool } = require("pg");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// =====================
+// ======================
 // MIDDLEWARE
-// =====================
+// ======================
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname)));
 
-// =====================
-// BASE DE DONNÉES
-// =====================
-const db = new sqlite3.Database("database.db");
+// ======================
+// DATABASE
+// ======================
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.DATABASE_URL
+        ? { rejectUnauthorized: false }
+        : false
+});
 
-// création table
-db.run(`
-CREATE TABLE IF NOT EXISTS clients (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nom TEXT,
-    prenom TEXT,
-    email TEXT,
-    telephone TEXT
-)
-`);
+// ======================
+// SAFE INIT TABLE (IMPORTANT)
+// ======================
+async function initDB() {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS clients (
+                id SERIAL PRIMARY KEY,
+                nom TEXT NOT NULL,
+                prenom TEXT NOT NULL,
+                email TEXT NOT NULL,
+                telephone TEXT NOT NULL
+            );
+        `);
 
-// =====================
-// PAGE D'ACCUEIL (IMPORTANT)
-// =====================
+        console.log("DB OK");
+    } catch (err) {
+        console.error("DB INIT ERROR:", err);
+    }
+}
+
+// ======================
+// ROUTES
+// ======================
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// =====================
-// AJOUT CLIENT
-// =====================
-app.post("/api/add", (req, res) => {
-
+// ======================
+// ADD CLIENT
+// ======================
+app.post("/api/add", async (req, res) => {
     const { nom, prenom, email, telephone } = req.body;
 
-    console.log("AJOUT CLIENT :", req.body);
+    if (!nom || !prenom || !email || !telephone) {
+        return res.status(400).json({ success: false, message: "Missing fields" });
+    }
 
-    db.run(
-        "INSERT INTO clients (nom, prenom, email, telephone) VALUES (?, ?, ?, ?)",
-        [nom, prenom, email, telephone],
-        function (err) {
-            if (err) {
-                console.error(err);
-                return res.json({ success: false });
-            }
+    try {
+        const result = await pool.query(
+            `INSERT INTO clients (nom, prenom, email, telephone)
+             VALUES ($1, $2, $3, $4)
+             RETURNING id`,
+            [nom, prenom, email, telephone]
+        );
 
-            res.json({ success: true, id: this.lastID });
-        }
-    );
+        res.json({ success: true, id: result.rows[0].id });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false });
+    }
 });
 
-// =====================
-// LIRE CLIENTS
-// =====================
-app.get("/api/clients", (req, res) => {
-    db.all("SELECT * FROM clients ORDER BY id DESC", [], (err, rows) => {
-        res.json(rows);
-    });
+// ======================
+// GET CLIENTS
+// ======================
+app.get("/api/clients", async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT * FROM clients ORDER BY id DESC"
+        );
+
+        res.json(result.rows);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json([]);
+    }
 });
 
-// =====================
-// SUPPRIMER CLIENT
-// =====================
-app.delete("/api/clients/:id", (req, res) => {
-
-    const id = req.params.id;
-
-    console.log("DELETE CLIENT ID :", id);
-
-    db.run("DELETE FROM clients WHERE id = ?", [id], function (err) {
-        if (err) {
-            console.error(err);
-            return res.json({ success: false });
-        }
+// ======================
+// DELETE CLIENT
+// ======================
+app.delete("/api/clients/:id", async (req, res) => {
+    try {
+        await pool.query(
+            "DELETE FROM clients WHERE id = $1",
+            [req.params.id]
+        );
 
         res.json({ success: true });
-    });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false });
+    }
 });
-app.get("/export-excel", (req, res) => {
 
-    db.all("SELECT * FROM clients ORDER BY id DESC", [], async (err, rows) => {
-
-        if (err) {
-            return res.status(500).send("Erreur");
-        }
+// ======================
+// EXPORT EXCEL
+// ======================
+app.get("/export-excel", async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT * FROM clients ORDER BY id DESC"
+        );
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Clients");
@@ -104,9 +131,7 @@ app.get("/export-excel", (req, res) => {
             { header: "Téléphone", key: "telephone", width: 20 }
         ];
 
-        rows.forEach(client => {
-            worksheet.addRow(client);
-        });
+        result.rows.forEach(row => worksheet.addRow(row));
 
         res.setHeader(
             "Content-Type",
@@ -121,12 +146,18 @@ app.get("/export-excel", (req, res) => {
         await workbook.xlsx.write(res);
         res.end();
 
-    });
-
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Erreur export");
+    }
 });
-// =====================
-// LANCEMENT SERVEUR
-// =====================
-app.listen(PORT, () => {
-    console.log("Serveur OK → http://localhost:" + PORT);
+
+// ======================
+// START SERVER (IMPORTANT FIX)
+// ======================
+app.listen(PORT, async () => {
+    console.log("Serveur lancé sur le port " + PORT);
+
+    // init DB après start (plus stable sur Render)
+    await initDB();
 });
