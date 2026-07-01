@@ -11,10 +11,12 @@ const PORT = process.env.PORT || 3000;
 // ======================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname)));
+
+// 🔥 IMPORTANT : ton front est dans /public
+app.use(express.static(path.join(__dirname, "public")));
 
 // ======================
-// DATABASE
+// DATABASE POSTGRES (RENDER)
 // ======================
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -24,7 +26,7 @@ const pool = new Pool({
 });
 
 // ======================
-// SAFE INIT TABLE (IMPORTANT)
+// INIT TABLE
 // ======================
 async function initDB() {
     try {
@@ -38,17 +40,17 @@ async function initDB() {
             );
         `);
 
-        console.log("DB OK");
+        console.log("✅ Database OK");
     } catch (err) {
-        console.error("DB INIT ERROR:", err);
+        console.error("❌ DB error:", err);
     }
 }
 
 // ======================
-// ROUTES
+// ROUTE HOME
 // ======================
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // ======================
@@ -69,7 +71,10 @@ app.post("/api/add", async (req, res) => {
             [nom, prenom, email, telephone]
         );
 
-        res.json({ success: true, id: result.rows[0].id });
+        res.json({
+            success: true,
+            id: result.rows[0].id
+        });
 
     } catch (err) {
         console.error(err);
@@ -153,11 +158,9 @@ app.get("/export-excel", async (req, res) => {
 });
 
 // ======================
-// START SERVER (IMPORTANT FIX)
+// START SERVER
 // ======================
 app.listen(PORT, async () => {
-    console.log("Serveur lancé sur le port " + PORT);
-
-    // init DB après start (plus stable sur Render)
+    console.log(`🚀 Server running on port ${PORT}`);
     await initDB();
 });
