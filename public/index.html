@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de Patrimoine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>Gestion de Patrimoine</h1>
+
+    <div class="info">
+        <h3>🔒 Confidentialité de vos données</h3>
+
+        <p>
+            Les informations recueillies dans ce formulaire sont strictement
+            confidentielles et sont utilisées uniquement dans le cadre de
+            l'étude de votre situation patrimoniale.
+        </p>
+
+        <p>
+            Elles permettent de préparer un entretien personnalisé et de vous
+            proposer des solutions adaptées à votre situation et à vos objectifs.
+        </p>
+
+        <p>
+            Vos données ne sont <strong>ni vendues, ni cédées, ni communiquées à des tiers</strong>
+            sans votre accord, sauf obligation légale.
+        </p>
+
+        <p>
+            Les informations sont conservées de manière sécurisée uniquement
+            pendant la durée nécessaire au traitement de votre demande.
+        </p>
+
+        <p>
+            <strong>
+                En remplissant ce formulaire, vous acceptez d'être recontacté(e)
+                dans le cadre de votre demande.
+            </strong>
+        </p>
+    </div>
+
+    <div class="container">
+
+        <form id="form">
+
+            <h2>Formulaire Client</h2>
+
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" placeholder="Entrer votre nom" required>
+
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" placeholder="Entrer votre prénom" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Entrer votre email" required>
+
+            <label for="telephone">Téléphone</label>
+            <input type="text" id="telephone" placeholder="Entrer votre téléphone" required>
+
+            <div class="consentement">
+                <input type="checkbox" id="consentement" required>
+
+                <label for="consentement">
+                    J'accepte que mes données personnelles soient utilisées afin
+                    d'être recontacté(e) dans le cadre de ma demande en gestion
+                    de patrimoine.
+                </label>
+            </div>
+
+            <button type="submit">Envoyer</button>
+
+        </form>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

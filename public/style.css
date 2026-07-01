@@ -1,0 +1,442 @@
+/* ==========================
+   STYLE PROFESSIONNEL
+   Gestion de Patrimoine
+========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:#f4f7fb;
+    color:#2c3e50;
+}
+
+/* TITRES */
+
+h1{
+    background:#000080;
+    color:white;
+    text-align:center;
+    padding:30px;
+    font-size:32px;
+    font-weight:600;
+    letter-spacing:1px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+h2{
+    color:#000080;
+    margin-bottom:25px;
+}
+
+/* ==========================
+        FORMULAIRE
+========================== */
+
+form{
+
+    width:95%;
+    max-width:650px;
+
+    margin:50px auto;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:15px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+}
+
+label{
+
+    display:block;
+
+    margin-top:18px;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+    color:#000080;
+
+}
+
+input,
+select,
+textarea{
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #d6dce5;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+    transition:.25s;
+
+    background:#fafafa;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+
+    border-color:#000080;
+
+    outline:none;
+
+    box-shadow:0 0 8px rgba(0,0,128,.20);
+
+    background:white;
+
+}
+
+/* ==========================
+        BOUTON
+========================== */
+
+button{
+
+    width:100%;
+
+    margin-top:30px;
+
+    padding:15px;
+
+    background:#000080;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+button:hover{
+
+    background:#0026cc;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 20px rgba(0,0,128,.30);
+
+}
+
+/* ==========================
+        LOGIN ADMIN
+========================== */
+
+.login-box{
+
+    width:420px;
+
+    max-width:95%;
+
+    margin:90px auto;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.10);
+
+}
+
+.login-box input{
+
+    margin-top:20px;
+
+}
+
+/* ==========================
+        DASHBOARD
+========================== */
+
+table{
+
+    width:95%;
+
+    margin:40px auto;
+
+    border-collapse:collapse;
+
+    background:white;
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+}
+
+thead{
+
+    background:#000080;
+
+    color:white;
+
+}
+
+th{
+
+    padding:18px;
+
+    text-align:left;
+
+    font-size:15px;
+
+}
+
+td{
+
+    padding:15px;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+tbody tr:nth-child(even){
+
+    background:#f8f9fd;
+
+}
+
+tbody tr:hover{
+
+    background:#edf3ff;
+
+}
+
+/* ==========================
+        CONTAINER
+========================== */
+
+.container{
+
+    width:95%;
+
+    max-width:1200px;
+
+    margin:auto;
+
+}
+
+/* ==========================
+        MESSAGE
+========================== */
+
+.success{
+
+    background:#d4edda;
+
+    color:#155724;
+
+    padding:15px;
+
+    border-radius:8px;
+
+    margin-bottom:20px;
+
+}
+
+.error{
+
+    background:#f8d7da;
+
+    color:#721c24;
+
+    padding:15px;
+
+    border-radius:8px;
+
+    margin-bottom:20px;
+
+}
+
+/* ==========================
+        RESPONSIVE
+========================== */
+
+@media(max-width:768px){
+
+    h1{
+
+        font-size:24px;
+
+        padding:20px;
+
+    }
+
+    form{
+
+        padding:25px;
+
+    }
+
+    table{
+
+        display:block;
+
+        overflow-x:auto;
+
+    }
+
+}
+/* =========================
+   ANIMATIONS LUXE BANQUE
+========================= */
+
+/* apparition douce */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* glow bleu banque */
+@keyframes glow {
+    0% { box-shadow: 0 0 5px rgba(0,0,128,.2); }
+    50% { box-shadow: 0 0 20px rgba(0,0,128,.4); }
+    100% { box-shadow: 0 0 5px rgba(0,0,128,.2); }
+}
+
+/* animation globale */
+form, table, .login-box {
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* effet hover luxe sur inputs */
+input:hover {
+    transform: scale(1.01);
+}
+
+/* bouton premium */
+button {
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+}
+
+/* tableau hover luxe */
+tr {
+    transition: 0.3s;
+}
+
+tr:hover {
+    background: #e8edff !important;
+    transform: scale(1.01);
+}
+.delete-btn {
+    background: #b00020;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.delete-btn:hover {
+    background: #ff0033;
+    transform: scale(1.05);
+}
+/* ==========================
+      HEADER INFO PRO
+========================== */
+
+.header-info{
+    width:95%;
+    max-width:650px;
+    margin:20px auto 0 auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    text-align:center;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+.header-info h3{
+    color:#000080;
+    font-size:20px;
+    margin-bottom:8px;
+    font-weight:700;
+}
+
+.header-info p{
+    color:#555;
+    font-size:14px;
+    line-height:1.5;
+}
+.info{
+    background:#f4f4f4;
+    border-left:5px solid #007bff;
+    padding:15px;
+    margin:20px auto;
+    max-width:700px;
+    border-radius:8px;
+}
+
+.info h3{
+    margin-top:0;
+}
+
+.info p{
+    margin:8px 0;
+}
+.consentement{
+    margin-top:20px;
+    margin-bottom:20px;
+    padding:15px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    background:#f8f9fa;
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+}
+
+.consentement input{
+    margin-top:4px;
+    width:18px;
+    height:18px;
+    cursor:pointer;
+}
+
+.consentement label{
+    cursor:pointer;
+    line-height:1.5;
+    font-size:14px;
+}
